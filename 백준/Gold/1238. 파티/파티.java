@@ -29,7 +29,6 @@ public class Main {
 
 		@Override
 		public int compareTo(Edge o) {
-			// TODO Auto-generated method stub
 			return this.t - o.t;
 		}
 
@@ -45,9 +44,11 @@ public class Main {
 		int X = Integer.parseInt(st.nextToken());
 
 		Node[] nodes = new Node[N + 1];
+		Node[] reverse = new Node[N + 1];
 
 		for (int i = 1; i <= N; i++) {
 			nodes[i] = new Node();
+			reverse[i] = new Node();
 		}
 
 		for (int i = 0; i < M; i++) {
@@ -57,55 +58,47 @@ public class Main {
 			int t = Integer.parseInt(st.nextToken());
 
 			nodes[from].edges.add(new Edge(to, t));
+			reverse[to].edges.add(new Edge(from, t));
 		}
 
 		int[] distance = new int[N + 1];
+		int[] reverseDistance = new int[N + 1];
 		Arrays.fill(distance, Integer.MAX_VALUE);
-		distance[X] = 0;
-		for (int i = 1; i <= N; i++) {
-			if (i == X) {
-				continue;
-			}
-			int[] goDis = new int[N + 1];
-			int[] backDis = new int[N + 1];
-			Arrays.fill(goDis, Integer.MAX_VALUE);
-			Arrays.fill(backDis, Integer.MAX_VALUE);
-			PriorityQueue<Edge> pq = new PriorityQueue<>();
+		Arrays.fill(reverseDistance, Integer.MAX_VALUE);
+		distance[X] = reverseDistance[X] = 0;
+		
+		PriorityQueue<Edge> pq = new PriorityQueue<>();
+		
+		pq.add(new Edge(X, 0));
+		while (!pq.isEmpty()) {
+			Edge now = pq.poll();
 			
-			goDis[i] = 0;
-			backDis[X] = 0;
-			pq.add(new Edge(i, 0));
-			while (!pq.isEmpty()) {
-				Edge now = pq.poll();
-				
-				for (Edge e : nodes[now.to].edges) {
-					if (goDis[e.to] > now.t + e.t) {
-						goDis[e.to] = now.t + e.t;
-						pq.add(new Edge(e.to, now.t + e.t));
-					}
-				}
-
-			}
-			
-			pq.add(new Edge(X, 0));
-			while (!pq.isEmpty()) {
-				Edge now = pq.poll();
-
-				for (Edge e : nodes[now.to].edges) {
-					if (backDis[e.to] > now.t + e.t) {
-						backDis[e.to] = now.t + e.t;
-						pq.add(new Edge(e.to, now.t + e.t));
-					}
+			for (Edge e : nodes[now.to].edges) {
+				if (distance[e.to] > e.t + now.t) {
+					distance[e.to] = now.t + e.t;
+					pq.add(new Edge(e.to, now.t + e.t));
 				}
 			}
+
+		}
+		
+		pq.add(new Edge(X, 0));
+		while (!pq.isEmpty()) {
+			Edge now = pq.poll();
 			
-			distance[i] = goDis[X] + backDis[i];
+			for (Edge e : reverse[now.to].edges) {
+				if (reverseDistance[e.to] > e.t + now.t) {
+					reverseDistance[e.to] = now.t + e.t;
+					pq.add(new Edge(e.to, now.t + e.t));
+				}
+			}
+
 		}
 		
 		int result = Integer.MIN_VALUE;
 		
 		for (int i = 1; i <= N; i++) {
-			result = Math.max(result,  distance[i]);
+			result = Math.max(result,  distance[i] + reverseDistance[i]);
 		}
 		System.out.println(result);
 	}
