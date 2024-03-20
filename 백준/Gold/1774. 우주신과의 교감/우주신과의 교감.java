@@ -11,6 +11,8 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
+	private static int[] parent;
+
 	private static class Node {
 		int x;
 		int y;
@@ -42,7 +44,7 @@ public class Main {
 		int N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
 
-		int[] parent = new int[N + 1];
+		parent = new int[N + 1];
 		Node[] nodes = new Node[N + 1];
 		for (int i = 1; i <= N; i++) {
 			st = new StringTokenizer(br.readLine());
@@ -60,42 +62,42 @@ public class Main {
 				edges.add(new Edge(i, j, Math.sqrt(sum)));
 			}
 		}
-		
+
 		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
 			int a = Integer.parseInt(st.nextToken());
 			int b = Integer.parseInt(st.nextToken());
-			if (find(parent,a) != find(parent, b)) {
-				union(a, b, parent);
+			if (find(a) != find(b)) {
+				union(a, b);
 			}
 		}
-		
+
 		double result = 0;
-		
-		Collections.sort(edges, (o1, o2) ->{
+
+		Collections.sort(edges, (o1, o2) -> {
 			return Double.compare(o1.w, o2.w);
 		});
-		
+
 		for (Edge edge : edges) {
-			if (find(parent, edge.to) != find(parent, edge.from)) {
-				union(edge.to, edge.from, parent);
+			if (find(edge.to) != find(edge.from)) {
+				union(edge.to, edge.from);
 				result += edge.w;
 			}
 		}
-		
+
 		System.out.printf("%.2f\n", result);
 	}
 
-	private static int find(int[] parent, int n) {
+	private static int find(int n) {
 		if (parent[n] == n) {
 			return n;
 		}
-		return find(parent, parent[n]);
+		return parent[n] = find(parent[n]);
 	}
 
-	private static void union(int a, int b, int[] parent) {
-		int aP = find(parent, a);
-		int bP = find(parent, b);
+	private static void union(int a, int b) {
+		int aP = find(a);
+		int bP = find(b);
 
 		if (a < b)
 			parent[bP] = aP;
