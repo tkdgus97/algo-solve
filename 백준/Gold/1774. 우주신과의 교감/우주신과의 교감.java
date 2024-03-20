@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
@@ -53,13 +54,14 @@ public class Main {
 			int y = Integer.parseInt(st.nextToken());
 			nodes[i] = new Node(x, y);
 		}
-
-		List<Edge> edges = new ArrayList<>();
-
+		int eCnt = 0;
+		PriorityQueue<Edge> pq = new PriorityQueue<Edge>((o1, o2) -> {
+			return Double.compare(o1.w, o2.w);
+		});
 		for (int i = 1; i <= N; i++) {
 			for (int j = i + 1; j <= N; j++) {
 				double sum = Math.pow(nodes[j].x - nodes[i].x, 2) + Math.pow(nodes[j].y - nodes[i].y, 2);
-				edges.add(new Edge(i, j, Math.sqrt(sum)));
+				pq.add(new Edge(i, j, Math.sqrt(sum)));
 			}
 		}
 
@@ -69,16 +71,26 @@ public class Main {
 			int b = Integer.parseInt(st.nextToken());
 			if (find(a) != find(b)) {
 				union(a, b);
+				eCnt++;
 			}
 		}
 
 		double result = 0;
+		
+		while(!pq.isEmpty()) {
+			Edge edge = pq.poll();
+			
+			if (find(edge.to) != find(edge.from)) {
+				union(edge.to, edge.from);
+				result += edge.w;
+			}
+			
+			if (eCnt == N - 1) {
+				break;
+			}
+		}
 
-		Collections.sort(edges, (o1, o2) -> {
-			return Double.compare(o1.w, o2.w);
-		});
-
-		for (Edge edge : edges) {
+		for (Edge edge : pq) {
 			if (find(edge.to) != find(edge.from)) {
 				union(edge.to, edge.from);
 				result += edge.w;
