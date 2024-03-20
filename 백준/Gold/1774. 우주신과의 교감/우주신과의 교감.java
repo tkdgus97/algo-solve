@@ -58,7 +58,6 @@ public class Main {
 			for (int j = i + 1; j <= N; j++) {
 				double sum = Math.pow(nodes[j].x - nodes[i].x, 2) + Math.pow(nodes[j].y - nodes[i].y, 2);
 				edges.add(new Edge(i, j, Math.sqrt(sum)));
-				edges.add(new Edge(j, i, Math.sqrt(sum)));
 			}
 		}
 		
