@@ -83,6 +83,7 @@ public class Main {
 			if (find(edge.to) != find(edge.from)) {
 				union(edge.to, edge.from);
 				result += edge.w;
+                eCnt++;
 			}
 			
 			if (eCnt == N - 1) {
