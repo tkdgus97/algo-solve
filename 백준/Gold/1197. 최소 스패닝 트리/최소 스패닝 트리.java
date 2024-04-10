@@ -3,62 +3,65 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-public class Main {
-    private static class Edge {
-        int to;
-        int w;
 
-        public Edge(int to, int w) {
-            this.to = to;
-            this.w = w;
-        }
-    }
+public class Main {
+    private static int[] parent;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         StringBuilder sb = new StringBuilder();
 
-        int N = Integer.parseInt(st.nextToken());
+        int V = Integer.parseInt(st.nextToken());
         int E = Integer.parseInt(st.nextToken());
 
-        List<Edge>[] nodes = new ArrayList[N + 1];
-        for (int i = 1; i <= N; i++) {
-            nodes[i] = new ArrayList<>();
+        parent = new int[V + 1];
+        for (int i = 1; i <= V; i++) {
+            parent[i] = i;
         }
+
+        PriorityQueue<int[]> pq = new PriorityQueue<>((o1, o2) -> {
+            return o1[2] - o2[2];
+        });
 
         for (int i = 0; i < E; i++) {
             st = new StringTokenizer(br.readLine());
-            int from = Integer.parseInt(st.nextToken());
-            int to = Integer.parseInt(st.nextToken());
+
+            int t = Integer.parseInt(st.nextToken());
+            int f = Integer.parseInt(st.nextToken());
             int w = Integer.parseInt(st.nextToken());
-
-            nodes[from].add(new Edge(to, w));
-            nodes[to].add(new Edge(from, w));
+            pq.add(new int[] {t,f,w});
         }
-
-        PriorityQueue<Edge> pq = new PriorityQueue<>((o1, o2) -> {
-            return o1.w - o2.w;
-        });
-
-        boolean[] visit = new boolean[N + 1];
-
-        pq.add(new Edge(1,0));
-
-        long result = 0;
+        int eCnt = 0;
+        int result = 0;
         while (!pq.isEmpty()) {
-            Edge e = pq.poll();
-            
-            if (visit[e.to]) continue;
-            visit[e.to] = true;
-            result += e.w;
-            for (Edge edge : nodes[e.to]) {
-                if (!visit[edge.to]) {
-                    pq.add(edge);
-                }
-            }
-        }
+            int[] e = pq.poll();
 
+            if (find(e[0]) != find(e[1])) {
+                union(e[0], e[1]);
+                result += e[2];
+                eCnt++;
+            }
+
+            if (eCnt == V - 1) break;
+        }
         System.out.println(result);
     }
 
+    private static int find(int x) {
+        if (parent[x] == x) {
+            return x;
+        }
+        return parent[x] = find(parent[x]);
+    }
+
+    private static void union(int a, int b) {
+        int x = find(a);
+        int y = find(b);
+
+        if (x > y) {
+            parent[x] = y;
+        } else {
+            parent[y] = x;
+        }
+    }
 }
