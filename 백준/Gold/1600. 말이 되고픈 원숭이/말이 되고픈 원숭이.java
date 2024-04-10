@@ -1,11 +1,11 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.*;
 
-//문제 풀이용
+
 public class Main {
+    private static int[][] map;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -14,74 +14,75 @@ public class Main {
         int K = Integer.parseInt(st.nextToken());
 
         st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+        int W = Integer.parseInt(st.nextToken());
+        int H = Integer.parseInt(st.nextToken());
 
-        int[][] map = new int[M][N];
+        map = new int[H][W];
 
-        for (int i = 0; i < M; i++) {
+        for (int i = 0; i < H; i++) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < N; j++) {
+            for (int j = 0; j < W; j++) {
                 map[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-
-        int result = BFS(map, N, M, K);
-
+        int result = -1;
+        if (map[H - 1][W - 1] != 1) {
+            result = BFS(W, H, K);
+        }
         System.out.println(result);
+
     }
 
-    private static int BFS(int[][] map, int N, int M, int K) {
-        int[] dx = {-1, 0, 1, 0};
-        int[] dy = {0, 1, 0, -1};
+    private static int BFS(int W, int H, int K) {
+        int[][] md = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+        int[][] mh = {{-1, -2}, {-2, -1}, {-2, 1}, {-1, 2}, {1, 2}, {2, 1}, {1, -2}, {2, -1}};
 
-        int[][] horseX = {{-2, -2}, {-1, 1}, {2, 2}, {1, -1}};
-        int[][] horseY = {{-1, 1}, {2, 2}, {1, -1}, {-2, -2}};
+        Queue<Monkey> Q = new ArrayDeque<>();
 
-        boolean[][][] visit = new boolean[M][N][K + 1];
-        Queue<int[]> Q = new ArrayDeque<>();
-
+        boolean[][][] visit = new boolean[H][W][K + 1];
         visit[0][0][K] = true;
-        Q.add(new int[]{0, 0, 0, K});
-        int result = -1;
-        while (!Q.isEmpty()) {
-            int[] now = Q.poll();
 
-            if (now[0] == M - 1 && now[1] == N - 1) {
-                return now[2];
+        Q.add(new Monkey(0, 0, K, 0));
+        while (!Q.isEmpty()) {
+            Monkey monkey = Q.poll();
+
+            if (monkey.x == H - 1 && monkey.y == W - 1) {
+                return monkey.time;
             }
 
             for (int i = 0; i < 4; i++) {
-                int nx = now[0] + dx[i];
-                int ny = now[1] + dy[i];
+                int nx = monkey.x + md[i][0];
+                int ny = monkey.y + md[i][1];
 
-                if (nx == 0 && ny == 0) continue;
-
-                if ((nx >= 0 && nx < M) && (ny >= 0 && ny < N) && map[nx][ny] == 0 && !visit[nx][ny][now[3]]) {
-//                    dis[nx][ny] = now[2] + 1;
-                    visit[nx][ny][now[3]] = true;
-                    Q.add(new int[]{nx, ny, now[2] + 1, now[3]});
+                if ((nx >= 0 && nx < H) && (ny >= 0 && ny < W) && !visit[nx][ny][monkey.horCnt] && map[nx][ny] == 0) {
+                    visit[nx][ny][monkey.horCnt] = true;
+                    Q.add(new Monkey(nx, ny, monkey.horCnt, monkey.time + 1));
                 }
             }
 
-            if (now[3] > 0) {
-                for (int i = 0; i < 4; i++) {
-                    for (int j = 0; j < 2; j++) {
-                        int hx = now[0] + horseX[i][j];
-                        int hy = now[1] + horseY[i][j];
-                        if (hx == 0 && hy == 0) continue;
-
-                        if ((hx >= 0 && hx < M) && (hy >= 0 && hy < N) && map[hx][hy] == 0 && !visit[hx][hy][now[3] - 1]) {
-//                            dis[hx][hy] = now[2] + 1;
-                            visit[hx][hy][now[3] - 1] = true;
-                            Q.add(new int[]{hx, hy, now[2] + 1, now[3] - 1});
-                        }
+            if (monkey.horCnt > 0) {
+                for (int i = 0; i < 8; i++) {
+                    int nx = monkey.x + mh[i][0];
+                    int ny = monkey.y + mh[i][1];
+                    if ((nx >= 0 && nx < H) && (ny >= 0 && ny < W) && !visit[nx][ny][monkey.horCnt - 1] && map[nx][ny] == 0) {
+                        visit[nx][ny][monkey.horCnt - 1] = true;
+                        Q.add(new Monkey(nx, ny, monkey.horCnt - 1, monkey.time + 1));
                     }
                 }
             }
         }
 
-        return result;
+        return -1;
     }
 
+    private static class Monkey {
+        int x, y, horCnt, time;
+
+        public Monkey(int x, int y, int horCnt, int time) {
+            this.x = x;
+            this.y = y;
+            this.horCnt = horCnt;
+            this.time = time;
+        }
+    }
 }
