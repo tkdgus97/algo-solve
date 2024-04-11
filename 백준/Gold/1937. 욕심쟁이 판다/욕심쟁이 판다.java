@@ -53,7 +53,6 @@ public class Main {
 
             if ((nx >= 0 && nx < N) && (ny >= 0 && ny < N) && map[x][y] < map[nx][ny]) {
                 dp[x][y] = Math.max(dp[x][y], dfs(nx, ny) + 1);
-                dfs(nx, ny);
             }
         }
 
