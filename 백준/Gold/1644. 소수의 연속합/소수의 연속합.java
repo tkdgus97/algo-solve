@@ -1,45 +1,54 @@
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
-//문제 풀이용
+
 public class Main {
-
+    private static List<Integer>[] trees;
     public static void main(String[] args) throws IOException {
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
 
-        boolean[] prime = new boolean[N + 1];
+        int n = Integer.parseInt(st.nextToken());
 
-        List<Integer> list = new ArrayList<>();
-        for (int i = 2; i <= N; i++) {
-            if (!prime[i]) {
-                list.add(i);
-                for (int j = i+i; j <= N; j += i) {
-                    prime[j] = true;
+        boolean[] isPrime = new boolean[n + 1];
+        isPrime[0] = isPrime[1] = true;
+        int primCnt = 0;
+        int result = 0;
+        for (int i = 2; i <= n; i++) {
+            if (!isPrime[i]) {
+                primCnt++;
+                for (int j = i + i; j <= n; j += i) {
+                    isPrime[j] = true;
                 }
             }
         }
-        int sum = 0, lt = 0, cnt = 0;
 
-        for (int rt = 0; rt < list.size(); rt++) {
-            sum += list.get(rt);
-            if (sum == N) {
-                cnt++;
-            }
-            while (sum >= N) {
-                sum -= list.get(lt);
-                if (sum == N) {
-                    cnt++;
-                }
-                lt++;
+        int[] primeNum = new int[primCnt];
+        int idx = 0;
+        for (int i = 2; i <= n; i++) {
+            if (!isPrime[i]) {
+                primeNum[idx++] = i;
             }
         }
-        System.out.println(cnt);
+
+        int lt = 0;
+        int sum = 0;
+        for (int i = 0; i < primCnt; i++) {
+            sum += primeNum[i];
+            if (sum == n) result++;
+            if (sum > n) {
+                while(sum > n) {
+                    sum -= primeNum[lt++];
+                    if (sum == n) result++;
+                }
+            }
+        }
+
+        System.out.println(result);
     }
+
+
 }
