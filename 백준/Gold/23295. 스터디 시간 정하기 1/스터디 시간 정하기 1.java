@@ -5,8 +5,6 @@ import java.util.*;
 
 
 public class Main {
-    private static int n;
-    private static StringBuilder stringBuilder;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -16,13 +14,14 @@ public class Main {
         int n = Integer.parseInt(st.nextToken());
         int t = Integer.parseInt(st.nextToken());
 
-        List<int[]>[] times = new ArrayList[n];
         long[] sum = new long[100001];
+        
         int maxTime = Integer.MIN_VALUE;
+        
         for (int i = 0; i < n; i++) {
-            times[i] = new ArrayList<>();
             st = new StringTokenizer(br.readLine());
             int k = Integer.parseInt(st.nextToken());
+            
             for (int j = 0; j < k; j++) {
                 st = new StringTokenizer(br.readLine());
                 int s = Integer.parseInt(st.nextToken());
