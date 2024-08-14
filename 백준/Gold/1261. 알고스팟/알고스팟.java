@@ -1,72 +1,92 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
+class Node implements Comparable<Node>{
+	int x;
+	int y;
+	int wall;
+		
+	public Node(int x, int y, int wall) {
+		this.x = x;
+		this.y = y;
+		this.wall = wall;
+	}
 
+	@Override 
+	public int compareTo(Node o) {
+		// 오름차순 
+		return this.wall - o.wall;
+	}
+}
+	
 public class Main {
-    private static int[] dx = {-1, 0, 1, 0};
-    private static int[] dy = {0, 1, 0, -1};
-    private static int[][] map;
-    private static int n, m;
+	
+	static int n,m;
+	static int[][] map;
+	static int res = Integer.MAX_VALUE;
+	
+	static int[] dx = {-1,1,0,0};
+	static int[] dy = {0,0,-1 ,1};
 
-    private static int[][] dis;
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        StringTokenizer st = new StringTokenizer(br.readLine());
-
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-
-        map = new int[m][n];
-        dis = new int[m][n];
-        for (int i = 0; i < m; i++) {
-            st = new StringTokenizer(br.readLine());
-            Arrays.fill(dis[i], Integer.MAX_VALUE);
-            String s = st.nextToken();
-            for (int j = 0; j < n; j++) {
-                map[i][j] = s.charAt(j) - '0';
-            }
-        }
-
-        int result = bfs();
-        System.out.println(result);
-    }
-
-    private static int bfs() {
-        boolean[][] visit = new boolean[n][m];
-
-        Queue<int[]> q = new LinkedList<>();
-        q.add(new int[]{0, 0, 0});
-        visit[0][0] = true;
-        dis[0][0] = 0;
-
-        while (!q.isEmpty()) {
-            int[] now = q.poll();
-
-            if (now[0] == (m - 1) && now[1] == (n - 1)) {
-                dis[now[0]][now[1]] = Math.min(now[2], dis[now[0]][now[1]]);
-            }
-            ;
-
-            for (int i = 0; i < 4; i++) {
-                int nx = now[0] + dx[i];
-                int ny = now[1] + dy[i];
-
-                if ((nx >= 0 && nx < m) && (ny >= 0 && ny < n)) {
-                    int v = now[2];
-                    if (map[nx][ny] == 1) v++;
-                    if (dis[nx][ny] > now[2]) {
-                        dis[nx][ny] = now[2];
-                        q.add(new int[]{nx, ny, v});
-                    }
-                }
-            }
-        }
-        return dis[m - 1][n - 1];
-    }
-
-
+	public static void main(String[] args) throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st =new StringTokenizer(br.readLine());
+		
+		n = Integer.parseInt(st.nextToken());
+		m = Integer.parseInt(st.nextToken());
+		
+		map = new int[m][n];
+		
+		for(int i=0; i<m; i++) {
+			String[] line = br.readLine().split("");
+			for(int j=0; j<n; j++) {
+				int num = Integer.parseInt(line[j]);
+				map[i][j] = num;
+			}
+		}
+		
+		System.out.println(bfs(0,0));
+	}
+	
+	
+	
+	static int bfs(int x, int y) {
+		Queue<Node> q = new PriorityQueue<>();
+		boolean[][] check = new boolean[m][n];
+		
+		check[y][x] = true;
+		q.add(new Node(x,y,0));
+		
+		while(!q.isEmpty()) {
+			Node pos = q.poll();
+			
+			int px = pos.x;
+			int py = pos.y;
+			int pwall = pos.wall;
+            
+			// 도착
+			if(px == n-1 && py == m-1) {
+				return pwall;
+			}
+			
+			for(int i=0; i<4 ; i++) {
+				int nx = px+dx[i];
+				int ny = py+dy[i];
+				
+				if(nx <0 || ny <0 || nx>n-1 || ny >m-1) continue;
+				
+				if(check[ny][nx]) continue;
+				
+				check[ny][nx] =true;
+				if(map[ny][nx]==0) {
+					q.add(new Node(nx,ny, pwall));
+				}else {
+					q.add(new Node(nx,ny, pwall+1));
+				}
+			}
+			
+		}
+		return 0;
+		
+	}
 }
