@@ -1,15 +1,14 @@
 class Solution {
     public int solution(int[] diffs, int[] times, long limit) {
-        int answer = 0;
+        int answer = bnSearch(diffs ,times, limit);
+        return answer;
+    }
+
+    
+    private static int bnSearch(int[] diffs, int[] times, long limit) {
         int r = 1;
-        int l = 0;
+        int l = findMax(diffs);
         int n = diffs.length;
-        
-        for(int now : diffs) {
-            l = Math.max(now, l);
-        }
-        
-        
         while(r < l) {
             int level = (r + l) / 2;
             long totalTime = times[0];
@@ -29,5 +28,13 @@ class Solution {
             }
         }
         return r;
+    }
+     private static int findMax(int[] diffs) {
+        int l = 0;
+        
+        for(int now : diffs) {
+            l = Math.max(now, l);
+        }
+         return l;
     }
 }
