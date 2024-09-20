@@ -1,0 +1,5 @@
+-- 코드를 작성해주세요
+SELECT COUNT(*) AS 'COUNT'
+FROM ECOLI_DATA A
+WHERE (A.GENOTYPE & 2) != 2 
+AND ((A.GENOTYPE & 1) = 1 OR (A.GENOTYPE & 4) = 4)
