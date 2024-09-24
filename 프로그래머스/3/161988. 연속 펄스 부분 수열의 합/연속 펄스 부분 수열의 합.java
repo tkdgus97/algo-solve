@@ -16,13 +16,6 @@ class Solution {
                 answer = Math.max(answer, Math.max(dp1[i], dp2[i]));
             }
         }
-//         long answer = Math.max(dp1[0], dp2[0]);
-//         for(int i = 1; i < n; i++) {
-//             dp1[i] = Math.max(dp1[i], dp1[i - 1] + dp1[i]);
-//             dp2[i] = Math.max(dp2[i], dp2[i - 1] + dp2[i]);
-            
-//             answer = Math.max(answer, Math.max(dp1[i], dp2[i]));
-//         }
     
         
         return answer;
