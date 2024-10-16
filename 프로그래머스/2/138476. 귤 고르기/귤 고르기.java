@@ -2,30 +2,23 @@ import java.util.*;
 class Solution {
     public int solution(int k, int[] tangerine) {
         int answer = 0;
-        
-        Set<Integer> vSet = new HashSet<>();
-        int[] vCnt = new int[10000001];
-        for(int v : tangerine) {
-            vSet.add(v);
-            vCnt[v]++;
+        HashMap<Integer,Integer> map =new HashMap<>();
+
+        for (int t : tangerine) {
+            map.put(t, map.getOrDefault(t, 0) + 1);
         }
-        
-        PriorityQueue<int[]> pq = new PriorityQueue<>((o1, o2) -> {
-            return o2[1] - o1[1];
-        });
-        for(int v : vSet) {
-            pq.add(new int[] {v, vCnt[v]});
-        }
-        
-        while(k > 0) {
-            int[] now = pq.poll();
-            k -= now[1];
-            if(k < 0) {
-                answer++;
-                break;
-            } 
+
+        List<Integer> list = new ArrayList<>(map.keySet());
+        list.sort((o1, o2) -> map.get(o2)-map.get(o1));
+
+        for(Integer key:list){
+            k -=map.get(key);
             answer++;
+            if(k<=0){
+                break;
+            }
         }
+
         return answer;
     }
 }
