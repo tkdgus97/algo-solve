@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -25,33 +26,33 @@ public class Main {
         int l = stoi(st.nextToken());
 
         int result = 0;
-        List<Water> waters = new ArrayList<>();
+        Water[] waters = new Water[n];
         for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
 
             int s = stoi(st.nextToken());
             int e = stoi(st.nextToken());
 
-            waters.add(new Water(s,e));
+            waters[i] = new Water(s,e);
         }
-
-        Collections.sort(waters, (o1, o2) -> {
+        Arrays.sort(waters, (o1, o2) -> {
             return o1.start - o2.start;
         });
 
         int prevEnd = 0;
-        for (Water water : waters) {
-            if (prevEnd >= water.end) continue;
-            if (prevEnd != 0 && prevEnd >= water.start) {
-                water.start = prevEnd + 1;
+        for (int i = 0; i < n; i++) {
+            if (prevEnd >= waters[i].end) continue;
+            if (prevEnd != 0 && prevEnd >= waters[i].start) {
+                waters[i].start = prevEnd + 1;
             }
-            int width = water.end - water.start;
+
+            int width = waters[i].end - waters[i].start;
             int tmpCnt = (width / l);
             if (width % l != 0) {
                 tmpCnt += 1;
             }
             result += tmpCnt;
-            prevEnd = water.start + (tmpCnt * l) - 1;
+            prevEnd = waters[i].start + (tmpCnt * l) - 1;
         }
         System.out.println(result);
     }
