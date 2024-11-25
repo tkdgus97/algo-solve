@@ -13,19 +13,25 @@ public class Main {
 
         int n = stoi(br.readLine());
 
-        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
         for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
 
             for (int j = 0; j < n; j++) {
                 int v = stoi(st.nextToken());
-                pq.add(v);
+                if (pq.size() < n) pq.add(v);
+                else {
+                    if (pq.peek() < v) {
+                        pq.poll();
+                        pq.add(v);
+                    }
+                }
             }
         }
-
-        for (int i = 0; i < n - 1; i++) {
-            pq.poll();
-        }
+//
+//        for (int i = 0; i < n - 1; i++) {
+//            pq.poll();
+//        }
 
         System.out.println(pq.poll());
     }
