@@ -67,7 +67,7 @@ public class Main {
         while(!q.isEmpty()) {
             Node n = q.poll();
 
-            if(n.time > 10) return -1;
+            if(n.time >= 10) return -1;
 
             // System.out.println(n.time + " : " + n.rx + " " + n.ry + " " + n.bx + " " + n.by);
             
