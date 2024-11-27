@@ -66,6 +66,10 @@ public class Main {
 
         while(!q.isEmpty()) {
             Node n = q.poll();
+
+            if(n.time > 10) return -1;
+
+            // System.out.println(n.time + " : " + n.rx + " " + n.ry + " " + n.bx + " " + n.by);
             
             for(int i = 0; i < 4; i++) {
                 int rx = n.rx;
@@ -96,9 +100,8 @@ public class Main {
                     }
                     break;
                 }
-
                 if(bx == exitX && by == exitY) continue;
-                if(rx == exitX && ry == exitY) return n.time;
+                if(rx == exitX && ry == exitY) return n.time + 1;
 
                 if(rx == bx && ry == by) {
                     if(i == 0) {
@@ -109,8 +112,7 @@ public class Main {
                         else ry -= 1;
                     } else if(i == 2) {
                         if(n.rx < n.bx) rx -= 1;
-                        else by -= 1;
-                        
+                        else bx -= 1;
                     } else if(i == 3) {
                         if(n.ry > n.by) ry += 1;
                         else by += 1;
