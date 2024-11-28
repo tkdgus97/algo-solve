@@ -66,9 +66,10 @@ public class Main {
                 Virus virus = viruses.get(i);
                 if(time == virus.v) {
                     if(map[virus.r][virus.c] >= virus.age) {
-                        // System.out.println(virus.r + " " + virus.c + " " + virus.v);
+                        //System.out.println(virus.r + " " + virus.c + " " + virus.age + " " + virus.v);
                         map[virus.r][virus.c] -= virus.age;
-                        viruses.add(new Virus(virus.r, virus.c, virus.age + 1, virus.v + 1));
+                        virus.age += 1;
+                        virus.v += 1;
                     } else {
                         dead.add(virus);
                     }
@@ -78,12 +79,13 @@ public class Main {
             //2
             for(int i = 0; i < dead.size(); i++) {
                 Virus virus = dead.get(i);
+                virus.v = -1;
                 map[virus.r][virus.c] += (virus.age / 2);
             }
             //3
             for(int i = 0; i < viruses.size(); i++) {
                 Virus virus = viruses.get(i);
-                if(time + 1 == virus.v) {
+                if((time + 1) == virus.v) {
                     if(virus.age % 5 == 0) {
                         // System.out.println(virus.r + " " + virus.c + " " + virus.v);
                         for(int j = 0; j < 8; j++) {
@@ -94,7 +96,6 @@ public class Main {
                                 viruses.add(new Virus(nx, ny, 1, time + 1));
                             }
                         }
-                        viruses.add(new Virus(virus.r, virus.c, virus.age + 1, virus.v));
                     }
                 }
             }
@@ -110,6 +111,7 @@ public class Main {
         for(int i = 0; i < viruses.size(); i++) {
             Virus virus = viruses.get(i);
             if(k == virus.v) {
+
                 result++;
             }
         }
