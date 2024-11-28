@@ -53,12 +53,12 @@ public class Main {
         }
         int time = 0;
         while(time < k) {
-            viruses.sort((o1,o2) -> {
-                if(o1.v == o2.v) {
-                    return Integer.compare(o1.age, o2.age);
-                }
-                return Integer.compare(o2.v, o1.v);
-            });
+            //viruses.sort((o1,o2) -> {
+            //    if(o1.v == o2.v) {
+            //        return Integer.compare(o1.age, o2.age);
+            //    }
+            //    return Integer.compare(o2.v, o1.v);
+            //});
 
             List<Integer> dead = new ArrayList<>();
             //1
