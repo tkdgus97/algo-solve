@@ -16,6 +16,7 @@ public class Main {
     private static int[] dy = {0,1,0,-1, -1,1,1,-1};
     private static int[][] food;
     private static ArrayDeque<Virus> viruses = new ArrayDeque<>();
+    private static int[][] map;
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -55,68 +56,80 @@ public class Main {
     }
 
     private static int simul() {
-        int[][] map = new int[n][n];
+        map = new int[n][n];
         for(int r = 0; r < n; r++) {
             Arrays.fill(map[r], 5);
         }
         int time = 0;
         while(time < k) {
-            List<Virus> dead = new ArrayList<>();
             //1
-            int size = viruses.size();
-            for(int i = 0; i < size; i++) {
-                Virus virus = viruses.poll();
-                if(map[virus.r][virus.c] >= virus.age) {
-                    //System.out.println(virus.r + " " + virus.c + " " + virus.age + " " + virus.v);
-                    map[virus.r][virus.c] -= virus.age;
-                    virus.age += 1;
-                    viruses.add(virus);
-                } else {
-                    dead.add(virus);
-                }
-            }
-
+            List<Virus> dead = eat();
             //2
-            for(int i = 0; i < dead.size(); i++) {
-                Virus virus = dead.get(i);
-                map[virus.r][virus.c] += (virus.age / 2);
-            }
-
-            List<Virus> tmpList = new ArrayList<>();
-            while(!viruses.isEmpty()) {
-                tmpList.add(viruses.poll());
-            }
-            size = tmpList.size();
+            kill(dead);
             //3
-            for(int i = 0; i < size; i++) {
-                Virus virus = tmpList.get(i);
-                if(virus.age % 5 == 0) {
-                    // System.out.println(virus.r + " " + virus.c + " " + virus.v);
-                    for(int j = 0; j < 8; j++) {
-                        int nx = virus.r + dx[j];
-                        int ny = virus.c + dy[j];
+            spread();
+            //4
+            addFood();
 
-                        if(checkRange(nx, ny)) {
-                            viruses.add(new Virus(nx, ny, 1));
-                        }
-                    }
-                }
-            }
-
-            for(int i = 0; i < size; i++) {
-                viruses.add(tmpList.get(i));
-            }
-            
-            for(int r = 0; r < n; r++) {
-                for(int c = 0; c < n; c++) {
-                    map[r][c] += food[r][c];
-                }
-            }
             time++;
         }
         return viruses.size();
     }
+    private static List<Virus> eat() {
+        List<Virus> dead = new ArrayList<>();
+        int size = viruses.size();
+        for(int i = 0; i < size; i++) {
+            Virus virus = viruses.poll();
+            if(map[virus.r][virus.c] >= virus.age) {
+                map[virus.r][virus.c] -= virus.age;
+                virus.age += 1;
+                viruses.add(virus);
+            } else {
+                dead.add(virus);
+            }
+        }
+        return dead;
+    }
 
+    private static void kill(List<Virus> dead) {
+        for(int i = 0; i < dead.size(); i++) {
+            Virus virus = dead.get(i);
+            map[virus.r][virus.c] += (virus.age / 2);
+        }
+    }
+
+    private static void spread() {
+        List<Virus> tmpList = new ArrayList<>();
+        while(!viruses.isEmpty()) {
+            tmpList.add(viruses.poll());
+        }
+        int size = tmpList.size();
+        for(int i = 0; i < size; i++) {
+            Virus virus = tmpList.get(i);
+            if(virus.age % 5 == 0) {
+                for(int j = 0; j < 8; j++) {
+                    int nx = virus.r + dx[j];
+                    int ny = virus.c + dy[j];
+
+                    if(checkRange(nx, ny)) {
+                        viruses.add(new Virus(nx, ny, 1));
+                    }
+                }
+            }
+        }
+
+        for(int i = 0; i < size; i++) {
+            viruses.add(tmpList.get(i));
+        }
+    }
+
+    private static void addFood() {
+        for(int r = 0; r < n; r++) {
+            for(int c = 0; c < n; c++) {
+                map[r][c] += food[r][c];
+            }
+        }
+    }
     private static boolean checkRange(int nx, int ny) {
         return (nx >= 0 && nx < n) && (ny >= 0 && ny < n);
     }
