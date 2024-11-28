@@ -60,7 +60,7 @@ public class Main {
                 return Integer.compare(o2.v, o1.v);
             });
 
-            List<Virus> dead = new ArrayList<>();
+            List<Integer> dead = new ArrayList<>();
             //1
             for(int i = 0; i < viruses.size(); i++) {
                 Virus virus = viruses.get(i);
@@ -71,14 +71,14 @@ public class Main {
                         virus.age += 1;
                         virus.v += 1;
                     } else {
-                        dead.add(virus);
+                        dead.add(i);
                     }
                 }
             }
 
             //2
             for(int i = 0; i < dead.size(); i++) {
-                Virus virus = dead.get(i);
+                Virus virus = viruses.get(dead.get(i));
                 virus.v = -1;
                 map[virus.r][virus.c] += (virus.age / 2);
             }
