@@ -81,9 +81,15 @@ public class Main {
                 Virus virus = dead.get(i);
                 map[virus.r][virus.c] += (virus.age / 2);
             }
+
+            List<Virus> tmpList = new ArrayList<>();
+            while(!viruses.isEmpty()) {
+                tmpList.add(viruses.poll());
+            }
+            size = tmpList.size();
             //3
-            for(int i = 0; i < viruses.size(); i++) {
-                Virus virus = viruses.poll();
+            for(int i = 0; i < size; i++) {
+                Virus virus = tmpList.get(i);
                 if(virus.age % 5 == 0) {
                     // System.out.println(virus.r + " " + virus.c + " " + virus.v);
                     for(int j = 0; j < 8; j++) {
@@ -91,13 +97,16 @@ public class Main {
                         int ny = virus.c + dy[j];
 
                         if(checkRange(nx, ny)) {
-                            viruses.addFirst(new Virus(nx, ny, 1));
+                            viruses.add(new Virus(nx, ny, 1));
                         }
                     }
                 }
-                viruses.add(virus);
             }
 
+            for(int i = 0; i < size; i++) {
+                viruses.add(tmpList.get(i));
+            }
+            
             for(int r = 0; r < n; r++) {
                 for(int c = 0; c < n; c++) {
                     map[r][c] += food[r][c];
