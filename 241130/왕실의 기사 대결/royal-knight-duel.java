@@ -3,7 +3,6 @@ import java.io.*;
 public class Main {
     private static int n,l,q;
     private static int[][] map;
-    private static int[][] move;
     private static int[] dx = {-1,0,1,0};
     private static int[] dy = {0,1,0,-1};
     private static int[] originHp;
@@ -39,7 +38,6 @@ public class Main {
         q = stoi(st.nextToken());
 
         map = new int[l][l];
-        move = new int[l][l];
         originHp = new int[n];
 
         for(int r = 0; r < l; r++) {
@@ -105,9 +103,10 @@ public class Main {
             int ny = nights[now].c + dy[dir];
             // System.out.println("1. " + now + " : "+ nx + " " + ny);
             if(!rangeCheck(nx, ny)) return;
+            if((nx + nights[now].h - 1) > l || (ny + nights[now].w - 1) > l) return;
             
-            for(int x = nx; x < nx + nights[now].h; x++) {
-                for(int y = ny; y < ny + nights[now].w; y++) {
+            for(int x = nx; x < nx + nights[now].h - 1 ; x++) {
+                for(int y = ny; y < ny + nights[now].w - 1; y++) {
                     if(map[x][y] == 1) {
                         nights[now].damage++;
                     }
