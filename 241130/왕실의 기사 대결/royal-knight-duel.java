@@ -105,8 +105,8 @@ public class Main {
             if(!rangeCheck(nx, ny)) return;
             if((nx + nights[now].h - 1) >= l || (ny + nights[now].w - 1) >= l) return;
             
-            for(int x = nx; x <= nx + nights[now].h - 1 ; x++) {
-                for(int y = ny; y <= ny + nights[now].w - 1; y++) {
+            for(int x = nx; x < nx + nights[now].h ; x++) {
+                for(int y = ny; y < ny + nights[now].w; y++) {
                     if(map[x][y] == 1) {
                         nights[now].damage++;
                     }
