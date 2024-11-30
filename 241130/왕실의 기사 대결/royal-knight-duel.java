@@ -68,6 +68,8 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             int idx = stoi(st.nextToken());
             int dir = stoi(st.nextToken());
+            // System.out.println("=========================");
+            // System.out.println(t + " : " + idx + " " + dir);
             simul(idx - 1, dir);
         }
 
@@ -101,9 +103,9 @@ public class Main {
             int now = q.poll();
             int nx = nights[now].r + dx[dir];
             int ny = nights[now].c + dy[dir];
-
+            // System.out.println("1. " + now + " : "+ nx + " " + ny);
             if(!rangeCheck(nx, ny)) return;
-            // System.out.println(now + " : "+ nx + " " + ny);
+            
             for(int x = nx; x < nx + nights[now].h; x++) {
                 for(int y = ny; y < ny + nights[now].w; y++) {
                     if(map[x][y] == 1) {
@@ -114,7 +116,7 @@ public class Main {
                     }
                 }
             }
-
+            // System.out.println(now + " : "+ nx + " " + ny);
             for(int i = 0; i < n; i++) {
                 if(visit[i] || nights[i].hp <= 0) continue;
                 if(nx > nights[i].r + nights[i].h - 1 || nights[i].r > nx + nights[now].h - 1) continue;
@@ -130,14 +132,16 @@ public class Main {
         nights[idx].damage = 0;
 
         for(int i = 0; i < n; i++) {
-            nights[i].r = tmpnx[i];
-            nights[i].c = tmpny[i];
-            nights[i].hp -= nights[i].damage;
+            if(visit[i]) {
+                nights[i].r = tmpnx[i];
+                nights[i].c = tmpny[i];
+                nights[i].hp -= nights[i].damage;
+            }
         }
     }
 
     private static boolean rangeCheck(int nx, int ny) {
-        return (nx >= 0 && nx < n) && (ny >= 0 && ny < n);
+        return (nx >= 0 && nx < l) && (ny >= 0 && ny < l);
     }
 
     private static int stoi(String s) {
