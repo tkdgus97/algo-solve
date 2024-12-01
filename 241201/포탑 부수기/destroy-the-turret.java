@@ -89,6 +89,11 @@ public class Main {
             Tower attack = findAttack();
             Tower target = findTarget();
 
+            attack.atk += (n + m);
+            attack.time++;
+            isDamage[attack.r][attack.c] = true;
+            isDamage[target.r][target.c] = true;
+
             // System.out.println("attack : "+attack.r + " " + attack.c);
             // System.out.println("target : "+target.r + " " + target.c);
             if(!laser(attack, target)) {
@@ -101,17 +106,11 @@ public class Main {
     }
 
     private static Tower findAttack() {
-        Tower t = list.get(0);
-        t.time++;
-        t.atk += (n + m);
-        isDamage[t.r][t.c] = true;
         return list.get(0);
     }
 
     private static Tower findTarget() {
-        Tower t = list.get(list.size() - 1);
-        isDamage[t.r][t.c] = true;
-        return t;
+        return list.get(list.size() - 1);
     }
 
 
