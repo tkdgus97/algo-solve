@@ -61,8 +61,8 @@ public class Main {
         }
 
         simul();
-        init();
-        Collections.sort(list);
+        // init();
+        // Collections.sort(list);
         System.out.println(list.get(list.size() - 1).atk);
     }
 
