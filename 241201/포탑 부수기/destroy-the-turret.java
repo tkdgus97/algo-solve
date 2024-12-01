@@ -61,40 +61,36 @@ public class Main {
         }
 
         simul();
-        // init();
-        // Collections.sort(list);
+        init();
+        Collections.sort(list);
         System.out.println(list.get(list.size() - 1).atk);
     }
 
     private static void simul() {
         while(k-- > 0) {
-            // System.out.println("=========================");
             init();
-
-            if(list.size() <= 1) break;
 
             Collections.sort(list);
 
-            // for(int r = 0; r < n; r++) {
-            //     System.out.println(Arrays.toString(map[r]));
-            // }
+            if(list.size() <= 1) break;
 
             Tower atack = findAtackTower();
             Tower target = findTargetTower();
             isDamage[atack.r][atack.c] = true;
             isDamage[target.r][target.c] = true;
+            // System.out.println("=========================");
             // System.out.println("attack : " + atack.r + " " + atack.c);
             // System.out.println("tartget : " +target.r + " " + target.c);
 
             if(!laser(atack, target)) {
                 boom(atack, target);
             }
-            // for(int r = 0; r < n; r++) {
-            //     System.out.println(Arrays.toString(map[r]));
-            // }
 
             removeTower();
             repair();
+            // for(int r = 0; r < n; r++) {
+            //     System.out.println(Arrays.toString(map[r]));
+            // }
         }
     }
 
@@ -145,10 +141,11 @@ public class Main {
             map[target.r][target.c] -= atack.atk;
             Point cur = route[target.r][target.c];
             while(true) {
+                // System.out.println(cur.r + " " + cur.c);
                 isDamage[cur.r][cur.c] = true;
+                if(cur.r == atack.r && cur.c == atack.c) break;
                 map[cur.r][cur.c] -= (atack.atk / 2);
                 cur = route[cur.r][cur.c];
-                if(cur.r == atack.r && cur.c == atack.c) break;
             }
             return true;
         }
