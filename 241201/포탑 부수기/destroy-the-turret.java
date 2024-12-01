@@ -73,19 +73,30 @@ public class Main {
 
     private static void simul() {
         for(int i = 0; i < k; i++){
+            // System.out.println("=======================");
+            // for(int r = 0; r < n; r++) {
+            //     for(int c = 0; c < m; c++) {
+            //         System.out.print(map[r][c].atk + " ");
+            //     }
+            //     System.out.println();
+            // }
             init();
 
             if(list.size() <= 1) break;
 
+            Collections.sort(list);
+
             Tower attack = findAttack();
             Tower target = findTarget();
 
+            // System.out.println("attack : "+attack.r + " " + attack.c);
+            // System.out.println("target : "+target.r + " " + target.c);
             if(!laser(attack, target)) {
                 boom(attack, target);
             }
-
             destroyTower();
             repair();
+
         }
     }
 
@@ -114,7 +125,7 @@ public class Main {
         boolean flag = false;
         while(!q.isEmpty()) {
             Point cur = q.poll();
-
+            // System.out.println(cur.r + " " + cur.c);
             if(cur.r == target.r && cur.c == target.c) {
                 flag = true;
                 break;
@@ -151,7 +162,7 @@ public class Main {
             int nx = (target.r + dx[i] + n) % n;
             int ny = (target.c + dy[i] + m) % m;
 
-            if(map[nx][ny].atk != 0 && nx != attack.r && ny != attack.c) {
+            if(map[nx][ny].atk != 0 && (nx != attack.r || ny != attack.c)) {
                 isDamage[nx][ny] = true;
                 map[nx][ny].atk -= (attack.atk / 2);
             }
@@ -189,8 +200,6 @@ public class Main {
                 }
             }
         }
-
-        Collections.sort(list);
     }
 
 
