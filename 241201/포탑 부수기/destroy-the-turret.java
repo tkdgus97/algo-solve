@@ -20,9 +20,10 @@ public class Main {
             this.r = r;
             this.c = c;
             this.atk = atk;
-            this.time = 0;
+            this.time = time;
         }
 
+        @Override
         public int compareTo(Tower t) {
             if(this.atk != t.atk) return this.atk - t.atk;
             if(this.time != t.time) return t.time - this.time;
@@ -74,6 +75,10 @@ public class Main {
 
             Collections.sort(list);
 
+            // for(int r = 0; r < n; r++) {
+            //     System.out.println(Arrays.toString(map[r]));
+            // }
+
             Tower atack = findAtackTower();
             Tower target = findTargetTower();
             isDamage[atack.r][atack.c] = true;
@@ -116,6 +121,7 @@ public class Main {
 
         boolean flag = false;
         route[atack.r][atack.c] = new Point(atack.r, atack.c);
+
         while(!q.isEmpty()) {
             Point now = q.poll();
             if(target.r == now.r && target.c == now.c) {
