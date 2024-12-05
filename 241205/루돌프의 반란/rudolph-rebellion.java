@@ -59,8 +59,8 @@ public class Main {
         }
     }
     private static void simul() {
-        // for(int t = 1; t <= m; t++) {
-            System.out.println("==============");
+        for(int t = 1; t <= m; t++) {
+            // System.out.println("==============");
             // for(int i = 0; i <= n; i++) {
             //     System.out.println(Arrays.toString(map[i]));
             // }
@@ -209,8 +209,6 @@ public class Main {
             int now = q.poll();
             int nx = santas[now].r + dx[dir];
             int ny = santas[now].c + dy[dir];
-
-            System.out.println( nx + " " + ny);
 
             if(!rangeCheck(nx, ny)) {
                 isOut[now] = true;
