@@ -61,11 +61,12 @@ public class Main {
             move();
 
             checkPoint();
+            nodeBlock();
 
+            block = new ArrayList<>();
             if(t <= m) {
                 goCamp(t);
             }
-
             nodeBlock();
 
             if(exit_count == m) {
