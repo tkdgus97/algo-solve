@@ -29,14 +29,18 @@ public class Main {
         }
 
         for (int i = 0; i < 6; i++) {
-            int m = 0;
-            for (int j = 1; j <= 6; j++) {
-                if (j == dice[0][i] || j == dice[0][pair(i)]) continue;
-                m = Math.max(m, j);
-            }
+            int m = findMax(0, i, pair(i));
             rec(1, dice[0][pair(i)], m);
         }
         System.out.println(result);
+    }
+    private static int findMax(int d, int bm, int top) {
+        int m = 0;
+        for (int j = 1; j <= 6; j++) {
+            if (j == dice[d][bm] || j == dice[d][top]) continue;
+            m = Math.max(m, j);
+        }
+        return m;
     }
 
     private static void rec(int d, int b, int sum) {
@@ -47,12 +51,7 @@ public class Main {
 
         int l = loc[d][b];
         int p = pair(l);
-        int m = 0;
-        for (int i = 1; i <= 6; i++) {
-            if (i == dice[d][l] || i == dice[d][p]) continue;
-            m = Math.max(i, m);
-        }
-
+        int m = findMax(d, l, p);
         sum += m;
         rec(d + 1, dice[d][p], sum);
     }
