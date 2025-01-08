@@ -8,38 +8,42 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
         StringBuilder sb = new StringBuilder();
-
         st = new StringTokenizer(br.readLine());
+
         int n = stoi(st.nextToken());
         int[] arr = new int[n];
 
+        int r = Integer.MIN_VALUE;
+        int l = 0;
+
         st = new StringTokenizer(br.readLine());
-        int max = Integer.MIN_VALUE;
         for (int i = 0; i < n; i++) {
             arr[i] = stoi(st.nextToken());
-            max = Math.max(max, arr[i]);
+            r = Math.max(r, arr[i]);
         }
 
         st = new StringTokenizer(br.readLine());
-        int v = stoi(st.nextToken());
+        int m = stoi(st.nextToken());
 
-        int l = 0;
-        int r = max;
         while (l <= r) {
             int mid = (l + r) / 2;
+
             long sum = 0;
             for (int i = 0; i < n; i++) {
-                if (mid < arr[i]) sum += mid;
-                else sum += arr[i];
+                if (sum > m) break;
+                if (arr[i] <= mid) {
+                    sum += arr[i];
+                } else {
+                    sum += mid;
+                }
             }
 
-            if (sum > v) {
-                r = mid - 1;
-            } else {
+            if (sum <= m) {
                 l = mid + 1;
+            } else {
+                r = mid - 1;
             }
         }
-
         System.out.println(r);
     }
 
@@ -48,4 +52,3 @@ public class Main {
     }
 
 }
-
