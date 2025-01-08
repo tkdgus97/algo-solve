@@ -1,38 +1,54 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 
 public class Main {
-public static int[] A;
-public static int[] videoSize;
-public static int sum;
-public static int count;
-public static int N;
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		int M = sc.nextInt();
-		int[] A = new int[N];
-		int start = 0;
-		int end =0;
-		for(int i=0; i<N; i++) {
-			A[i] = sc.nextInt();
-			if(start < A[i]) start = A[i];
-			end = end + A[i];
-		}
-		while(start <= end) {
-			int middle = (start + end)/2;
-			int sum =0;
-			int count =0;
-			for(int i=0; i<N; i++) {
-				if(sum + A[i] > middle) {
-					count++;
-					sum =0;
-				}
-				sum = sum + A[i];
-			}
-			if(sum != 0) count++;
-			if(count > M) start = middle +1;
-			else end = middle -1;
-		}
-		System.out.println(start);
-	}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+        StringBuilder sb = new StringBuilder();
+        st = new StringTokenizer(br.readLine());
+
+        int n = stoi(st.nextToken());
+        int m = stoi(st.nextToken());
+        int[] arr = new int[n];
+
+        int r = 0;
+        int l = Integer.MIN_VALUE;
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < n; i++) {
+            arr[i] = stoi(st.nextToken());
+            l = Math.max(l, arr[i]);
+            r += arr[i];
+        }
+
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            int cnt = 0;
+            long tmp = 0;
+
+            for (int i = 0; i < n; i++) {
+                if (tmp + arr[i] > mid) {
+                    cnt++;
+                    tmp = 0;
+                }
+                tmp += arr[i];
+            }
+            if (tmp != 0) cnt++;
+            if (cnt > m) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+
+        System.out.println(l);
+    }
+
+    private static int stoi(String v) {
+        return Integer.parseInt(v);
+    }
+
 }
