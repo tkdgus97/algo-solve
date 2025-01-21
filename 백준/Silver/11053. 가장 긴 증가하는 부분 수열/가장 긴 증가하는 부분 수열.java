@@ -1,41 +1,40 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.PriorityQueue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+        StringBuilder sb = new StringBuilder();
+        st = new StringTokenizer(br.readLine());
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		StringBuilder sb = new StringBuilder();
+        int n = stoi(st.nextToken());
 
-		int N = Integer.parseInt(st.nextToken());
-		
-		int[] arr = new int[N];
-		int[] lis = new int[N];
-		
-		st = new StringTokenizer(br.readLine());
-		
-		for (int i = 0; i < N; i++) {
-			arr[i] = Integer.parseInt(st.nextToken());
-		}
-		
-		for (int i = 0; i < N; i++) {
-			lis[i] = 1;
-			for (int j = 0; j < i; j++) {
-				if (arr[i] > arr[j]) {
-					lis[i] = Math.max(lis[i], lis[j] + 1);
-				}
-			}
-		}
-		
-		int result = Integer.MIN_VALUE;
-		for (int i = 0; i < N; i++) {
-			result = Math.max(result, lis[i]);
-		}
-		System.out.println(result);
-	}
+        int[] arr = new int[n];
+        int[] dp = new int[n];
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < n; i++) {
+            arr[i] = stoi(st.nextToken());
+        }
+
+        int result = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+            for (int j = 0; j < i; j++) {
+                if (arr[j] < arr[i]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            result = Math.max(dp[i], result);
+        }
+
+        System.out.println(result);
+    }
+
+    private static int stoi(String v) {
+        return Integer.parseInt(v);
+    }
 
 }
