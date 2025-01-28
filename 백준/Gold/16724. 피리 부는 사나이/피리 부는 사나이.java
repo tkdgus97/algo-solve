@@ -4,14 +4,15 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    private static int n, m;
-    private static char[][] arr;
-    private static boolean[][] visit;
-    private static boolean[][] isEnd;
-
-    private static int cnt = 0;
     private static int[] dx = {-1, 0, 1, 0};
     private static int[] dy = {0, 1, 0, -1};
+
+    private static int n, m;
+    private static int[][] map;
+    private static boolean[][] visit;
+    private static boolean[][] end;
+
+    private static int cnt = 0;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -21,48 +22,63 @@ public class Main {
 
         n = stoi(st.nextToken());
         m = stoi(st.nextToken());
-        arr = new char[n][m];
+
+        map = new int[n][m];
         visit = new boolean[n][m];
-        isEnd = new boolean[n][m];
+        end = new boolean[n][m];
+
         for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
             String s = st.nextToken();
             for (int j = 0; j < m; j++) {
-                arr[i][j] = s.charAt(j);
+                map[i][j] = toI(s.charAt(j));
             }
         }
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 if (!visit[i][j]) {
-                    rec(i, j);
+                    dfs(i, j);
                 }
             }
         }
-
         System.out.println(cnt);
     }
 
-    private static void rec(int x, int y) {
-        if (!visit[x][y]) {
-            visit[x][y] = true;
-            if (arr[x][y] == 'U') {
-                rec(x + dx[0], y + dy[0]);
-            } else if (arr[x][y] == 'R') {
-                rec(x + dx[1], y + dy[1]);
-            } else if (arr[x][y] == 'D') {
-                rec(x + dx[2], y + dy[2]);
-            } else if (arr[x][y] == 'L') {
-                rec(x + dx[3], y + dy[3]);
-            }
-        } else {
-            if (!isEnd[x][y]) cnt++;
+    private static void dfs(int r, int c) {
+        visit[r][c] = true;
+        int nx = r + dx[map[r][c]];
+        int ny = c + dy[map[r][c]];
+
+        if (!visit[nx][ny]) {
+            dfs(nx, ny);
         }
-        isEnd[x][y] = true;
+
+        if (!end[nx][ny]) {
+            cnt++;
+        }
+        end[r][c] = true;
+    }
+
+    private static boolean check(int nx, int ny) {
+        return nx >= 0 && nx < n && ny >= 0 && ny < m;
     }
 
     private static int stoi(String v) {
         return Integer.parseInt(v);
+    }
+
+    private static int toI(char c) {
+        if (c == 'U') {
+            return 0;
+        } else if (c == 'R') {
+            return 1;
+        } else if (c == 'D') {
+            return 2;
+        } else if (c == 'L') {
+            return 3;
+        }
+        return -1;
     }
 
 }
