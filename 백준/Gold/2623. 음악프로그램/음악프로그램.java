@@ -4,7 +4,6 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
@@ -32,7 +31,6 @@ public class Main {
                 s = e;
             }
         }
-
         for (int i = 1; i <= n; i++) {
             if (d[i] == 0) {
                 q.add(i);
@@ -43,19 +41,14 @@ public class Main {
             int now = q.poll();
             finish++;
             sb.append(now).append("\n");
-
             for(Integer next : adj[now]) {
                 d[next]--;
                 if (d[next] == 0) q.add(next);
             }
         }
-
         System.out.println(finish == n ? sb : 0);
     }
-
     private static int stoi(String v) {
         return Integer.parseInt(v);
     }
-
-
 }
