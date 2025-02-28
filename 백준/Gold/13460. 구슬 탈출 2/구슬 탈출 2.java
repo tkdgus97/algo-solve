@@ -1,11 +1,14 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
-import java.io.*;
+
 public class Main {
-    private static int n,m;
+    private static int n, m;
     private static char[][] map;
-    private static int exitX, exitY;
-    private static int[] dx = {-1,0,1,0};
-    private static int[] dy = {0,1,0,-1};
+    private static int ex, ey;
+    private static int[] dx = {-1, 0, 1, 0};
+    private static int[] dy = {0, 1, 0, -1};
 
     static class Node {
         int rx;
@@ -23,117 +26,118 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringTokenizer st;
+        StringBuilder sb = new StringBuilder();
+
+        st = new StringTokenizer(br.readLine());
 
         n = stoi(st.nextToken());
         m = stoi(st.nextToken());
         map = new char[n][m];
+        int rx = 0;
+        int ry = 0;
+        int bx = 0;
+        int by = 0;
 
-        int redX = 0;
-        int redY = 0;
-        int blueX = 0;
-        int blueY = 0;
-        for(int r = 0; r < n; r++) {
-            String s = br.readLine();
-            for(int c = 0; c < m; c++) {
-                map[r][c] = s.charAt(c);
-                if(map[r][c] == 'R') {
-                    redX = r;
-                    redY = c;
-                    map[r][c] = '.';
-                } else if(map[r][c] == 'B') {
-                    blueX = r;
-                    blueY = c;
-                    map[r][c] = '.';
-                } else if(map[r][c] == 'O') {
-                    exitX = r;
-                    exitY = c;
+        for (int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine());
+            String s = st.nextToken();
+            for (int j = 0; j < m; j++) {
+                map[i][j] = s.charAt(j);
+                if (map[i][j] == 'R') {
+                    rx = i;
+                    ry = j;
+                }
+                if (map[i][j] == 'B') {
+                    bx = i;
+                    by = j;
+                }
+                if (map[i][j] == 'O') {
+                    ex = i;
+                    ey = j;
                 }
             }
         }
 
-        int result = bfs(redX, redY, blueX, blueY);
+        int result = bfs(rx, ry, bx, by);
         System.out.println(result);
     }
-    private static int bfs(int srx, int sry, int sbx, int sby) {
-        Queue<Node> q = new LinkedList<>();
+
+    private static int bfs(int rx, int ry, int bx, int by) {
         boolean[][][][] visit = new boolean[n][m][n][m];
-        visit[srx][sry][sbx][sby] = true;
+        visit[rx][ry][bx][by] = true;
+        Queue<Node> q = new LinkedList<>();
 
-        q.add(new Node(srx, sry, sbx, sby, 0));
+        q.add(new Node(rx, ry, bx, by, 0));
 
-        while(!q.isEmpty()) {
-            Node n = q.poll();
+        while (!q.isEmpty()) {
+            Node now = q.poll();
 
-            if(n.time >= 10) return -1;
+            if (now.time == 10) return -1;
 
-            // System.out.println(n.time + " : " + n.rx + " " + n.ry + " " + n.bx + " " + n.by);
-            
-            for(int i = 0; i < 4; i++) {
-                int rx = n.rx;
-                int ry = n.ry;
-                int bx = n.bx;
-                int by = n.by;
+            for (int i = 0; i < 4; i++) {
+                int nrx = now.rx;
+                int nry = now.ry;
+                int nbx = now.bx;
+                int nby = now.by;
 
-                while(true) {
-                    int nx = rx + dx[i];
-                    int ny = ry + dy[i];
-                    if(rangeCheck(nx, ny) && map[nx][ny] != '#') {
-                        rx = nx;
-                        ry = ny;
-                        if(rx == exitX && ry == exitY) break;
-                        continue;
+                while (true) {
+                    nrx += dx[i];
+                    nry += dy[i];
+                    if (nrx == ex && nry == ey) break;
+                    if (map[nrx][nry] == '#') {
+                        nrx -= dx[i];
+                        nry -= dy[i];
+                        break;
                     }
-                    break;
                 }
 
-                while(true) {
-                    int nx = bx + dx[i];
-                    int ny = by + dy[i];
-                    if(rangeCheck(nx, ny) && map[nx][ny] != '#') {
-                        bx = nx;
-                        by = ny;
-                        if(bx == exitX && by == exitY) break;
-                        continue;
+                while (true) {
+                    nbx += dx[i];
+                    nby += dy[i];
+                    if (nbx == ex && nby == ey) break;
+                    if (map[nbx][nby] == '#') {
+                        nbx -= dx[i];
+                        nby -= dy[i];
+                        break;
                     }
-                    break;
-                }
-                if(bx == exitX && by == exitY) continue;
-                if(rx == exitX && ry == exitY) return n.time + 1;
-
-                if(rx == bx && ry == by) {
-                    if(i == 0) {
-                        if(n.rx > n.bx) rx += 1;
-                        else bx += 1;
-                    } else if(i == 1) {
-                        if(n.ry > n.by) by -= 1;
-                        else ry -= 1;
-                    } else if(i == 2) {
-                        if(n.rx < n.bx) rx -= 1;
-                        else bx -= 1;
-                    } else if(i == 3) {
-                        if(n.ry > n.by) ry += 1;
-                        else by += 1;
-                    } 
                 }
 
-                if(!visit[rx][ry][bx][by]) {
-                    visit[rx][ry][bx][by] = true;
-                    q.add(new Node(rx,ry,bx,by, n.time + 1));
+                if ((nbx == ex && nby == ey)) continue;
+                if ((nrx == ex && nry == ey)) return now.time + 1;
+
+                if (nrx == nbx && nry == nby) {
+                    if (i == 0) {
+                        if (now.rx > now.bx) nrx += 1;
+                        else nbx += 1;
+                    } else if (i == 1) {
+                        if (now.ry > now.by) nby -= 1;
+                        else nry -= 1;
+                    } else if (i == 2) {
+                        if (now.rx > now.bx) nbx -= 1;
+                        else nrx -= 1;
+                    } else if (i == 3) {
+                        if (now.ry > now.by) nry += 1;
+                        else nby += 1;
+                    }
+                }
+
+                if (!visit[nrx][nry][nbx][nby]) {
+                    visit[nrx][nry][nbx][nby] = true;
+                    q.add(new Node(nrx, nry, nbx, nby, now.time + 1));
                 }
             }
         }
-
         return -1;
     }
 
-    private static boolean rangeCheck(int nx, int ny) {
+    private static boolean check(int nx, int ny) {
         return nx >= 0 && nx < n && ny >= 0 && ny < m;
     }
 
-    private static int stoi(String s) {
-        return Integer.parseInt(s);
+    private static int stoi(String v) {
+        return Integer.parseInt(v);
     }
 }
