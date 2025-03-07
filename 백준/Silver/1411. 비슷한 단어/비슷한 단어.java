@@ -29,28 +29,23 @@ public class Main {
         System.out.println(cnt);
     }
 
-    private static boolean areSimilar(String word1, String word2) {
-        Map<Character, Character> mapping = new HashMap<>();
-        Set<Character> used = new HashSet<>();
+    private static boolean areSimilar(String word, String word1) {
+        Map<Character, Character> map = new HashMap<>();
+        boolean[] check = new boolean[26];
 
-        for (int k = 0; k < word1.length(); k++) {
-            char c1 = word1.charAt(k);
-            char c2 = word2.charAt(k);
-
-            if (mapping.containsKey(c1)) {
-                if (mapping.get(c1) != c2) {
-                    return false; // 기존 매핑과 다르면 실패
-                }
+        for (int i = 0; i < word.length(); i++) {
+            if (map.containsKey(word.charAt(i))) {
+                if (map.get(word.charAt(i)) != word1.charAt(i)) return false;
             } else {
-                if (used.contains(c2)) {
-                    return false; // 이미 다른 문자가 c2로 매핑됨
-                }
-                mapping.put(c1, c2);
-                used.add(c2);
+                if (check[word1.charAt(i) - 'a']) return false;
+                map.put(word.charAt(i), word1.charAt(i));
+                check[word1.charAt(i) - 'a'] = true;
             }
         }
+
         return true;
     }
+
 
     private static int stoi(String v) {
         return Integer.parseInt(v);
