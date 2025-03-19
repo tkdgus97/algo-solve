@@ -34,8 +34,9 @@ public class Main {
         p[1] = 1;
         dfs(1);
         for (int i = 2; i <= n; i++) {
-            System.out.println(p[i]);
+            sb.append(p[i]).append("\n");
         }
+        System.out.println(sb);
     }
 
     private static void dfs(int v) {
