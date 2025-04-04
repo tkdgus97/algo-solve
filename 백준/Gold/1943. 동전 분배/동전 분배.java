@@ -1,69 +1,56 @@
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		StringBuilder sb = new StringBuilder();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+        StringBuilder sb = new StringBuilder();
+        for (int k = 0; k < 3; k++) {
+            st = new StringTokenizer(br.readLine());
+            int n = stoi(st.nextToken());
+            int[] coin = new int[n];
+            int[] cnt = new int[n];
+            int sum = 0;
+            for (int i = 0; i < n; i++) {
+                st = new StringTokenizer(br.readLine());
+                int v = stoi(st.nextToken());
+                int c = stoi(st.nextToken());
+                coin[i] = v;
+                cnt[i] = c;
+                sum += (v * c);
+            }
+            int[][] dp = new int[n + 1][sum + 1];
+            if (sum % 2 == 1) {
+                sb.append(0).append("\n");
+                continue;
+            }
+            dp[0][0] = 1;
+            sum /= 2;
+            for (int i = 1; i <= n; i++) {
+                int v = coin[i - 1];
+                int count = cnt[i - 1];
+                for (int j = 0; j <= sum; j++) {
+                    if (dp[i - 1][j] == 1) {
+                        for (int l = 0; l <= count; l++) {
+                            if (j + v * l <= sum) {
+                                dp[i][j + v * l] = 1;
+                            }
+                        }
+                    }
+                }
+            }
+            sb.append(dp[n][sum]).append("\n");
+        }
 
-		for (int i = 0; i < 3; i++) {
-			st = new StringTokenizer(br.readLine());
-			int N = Integer.parseInt(st.nextToken());
+        System.out.println(sb);
 
-			int[][] coins = new int[N][2];
-			boolean[] dp = new boolean[100001];
+    }
 
-			int total = 0;
-			for (int j = 0; j < N; j++) {
-				st = new StringTokenizer(br.readLine());
-				int price = Integer.parseInt(st.nextToken());
-				int v = Integer.parseInt(st.nextToken());
-
-				coins[j][0] = price;
-				coins[j][1] = v;
-
-				total += (price * v);
-
-				for (int k = 1; k <= v; k++) {
-					dp[price * k] = true;
-				}
-			}
-
-			if (total % 2 == 1) {
-				sb.append(0).append("\n");
-				continue;
-			}
-
-			total = total / 2;
-			
-			dp[0] = true;
-
-			for (int j = 0; j < N; j++) {
-				int price = coins[j][0];
-				int v = coins[j][1];
-
-				for (int k = total; k >= 0; k--) {
-					if (k - price > 0 && dp[k - price]) {
-						for (int l = 1; l <= v; l++) {
-							if (k + price * l > total) {
-								break;
-							} else {
-								dp[k + price * l] = true;
-							}
-						}
-					}
-				}
-			}
-			
-			sb.append(dp[total] ? 1 : 0).append("\n");
-		}
-
-		System.out.println(sb);
-	}
+    private static int stoi(String v) {
+        return Integer.parseInt(v);
+    }
 }
