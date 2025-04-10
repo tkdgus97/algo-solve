@@ -4,50 +4,63 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    private static int result = 0;
-
+    private static int n,m,k;
+    private static char[][] map;
     private static int[] dx = {-1,0,1,0};
     private static int[] dy = {0,1,0,-1};
+    private static int[][] dp;
+    private static boolean[][] visit;
+    private static int result = 0;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringTokenizer st;
         StringBuilder sb = new StringBuilder();
 
-        int R = Integer.parseInt(st.nextToken());
-        int C = Integer.parseInt(st.nextToken());
-        int K = Integer.parseInt(st.nextToken());
+        st= new StringTokenizer(br.readLine());
 
-        char[][] map = new char[R][C];
+        n = stoi(st.nextToken());
+        m = stoi(st.nextToken());
+        k = stoi(st.nextToken());
 
-        for (int i = 0; i < R; i++) {
+        map = new char[n][m];
+        dp = new int[n][m];
+        visit = new boolean[n][m];
+        for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
             String s = st.nextToken();
-            for (int j = 0; j < C; j++) {
+            for (int j = 0; j < m; j++) {
                 map[i][j] = s.charAt(j);
+                dp[i][j] = -1;
             }
         }
 
-        DFS(R - 1, 0, 1, map, R, C, K, new boolean[R][C]);
+        dfs(n - 1, 0, 1);
         System.out.println(result);
     }
 
-    private static void DFS(int x, int y, int cnt, char[][] map, int R, int C, int K, boolean[][] visit) {
-        if (x == 0 && y == C - 1) {
-            if (cnt == K) {
-                result++;
-            }
+    private static void dfs(int r, int c, int v) {
+        if (r == 0 && c == m - 1 && v == k) {
+            result += 1;
             return;
         }
 
-        visit[x][y] = true;
-        for (int i = 0; i < 4; i++) {
-            int nx = x + dx[i];
-            int ny = y + dy[i];
+        if (v > k) return;
 
-            if ((nx >= 0 && nx < R) && (ny >= 0 && ny < C) && !visit[nx][ny] && map[nx][ny] == '.') {
-                DFS(nx, ny, cnt + 1, map, R,C,K, visit);
+        visit[r][c] = true;
+        for (int i = 0; i < 4; i++) {
+            int nx = r + dx[i];
+            int ny = c + dy[i];
+            if (check(nx, ny) && !visit[nx][ny] && map[nx][ny] != 'T') {
+                dfs(nx, ny, v + 1);
             }
         }
-        visit[x][y] = false;
+        visit[r][c] = false;
+    }
+
+    private static boolean check(int nx, int ny) {
+        return nx >= 0 && nx < n && ny >= 0 && ny < m;
+    }
+    private static int stoi(String v) {
+        return Integer.parseInt(v);
     }
 }
